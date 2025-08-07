@@ -29,25 +29,31 @@ pip install -r requirements.txt
 Before starting development, copy each `env.xxxx.template` file to its corresponding `.env.xxxx` file. For example:
 
 ```bash
-cp .env.development.template .env.development
-cp .env.staging.template .env.staging
-cp .env.production.template .env.production
-cp .env.test.template .env.test
-cp .env.openai.development.template .env.openai.development
-cp .env.local.template .env.local
+cp env.development.template .env.development
+cp env.production.template .env.production
+cp env.ollama.production.template .env.ollama.production
+cp env.ollama.development.template .env.development.production
+cp env.openai.development.template .env.openai.development
+cp env.openai.production.template .env.openai.production
+cp env.vllm.production.template .env.vllm.production
+cp env.vllm.development.template .env.vllm.development
+cp env.template .env 
 ```
 
 Edit the copied `.env.xxxx` files as needed for your environment.
 
 Example organization for multiple environments:
 
-```
+```bash
 .env.development
-.env.staging
 .env.production
-.env.test
+.env.ollama.production
+.env.development.production
 .env.openai.development
-.env.local
+.env.openai.production
+.env.vllm.production
+.env.vllm.development
+.env 
 ```
 
 ### 🌍 General
