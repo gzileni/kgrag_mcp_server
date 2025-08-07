@@ -1,0 +1,23 @@
+theme: minima
+title: Kgrag MCP Server
+author: Giuseppe Zileni
+email: gzileni@hotmail.com
+description: >-
+  Krag MCP Server is a modular system for managing, ingesting, and querying structured and unstructured data.  
+  It is designed for easy integration with graph databases (Neo4j), AWS S3 storage, Redis cache, vector search engines (Qdrant), and advanced language models (LLM).  
+  The project provides a scalable, containerized infrastructure via Docker Compose to orchestrate data pipelines, semantic enrichment, and analysis through advanced queries.  
+  Ideal for knowledge graph, AI, and information flow automation applications.
+version: 1.0.0
+
+github_username:  gzileni
+linkedin_username: gzileni
+
+plugins:
+ - jekyll-feed
+ - jekyll-seo-tag
+
+social:
+  - icon: fab fa-github
+    link: https://github.com/gzileni/kgrag-store
+  - icon: fab fa-linkedin
+    link: https://www.linkedin.com/in/gzileni
