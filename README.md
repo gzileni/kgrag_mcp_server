@@ -5,175 +5,11 @@ It is designed for easy integration with graph databases (Neo4j), AWS S3 storage
 The project provides a scalable, containerized infrastructure via Docker Compose to orchestrate data pipelines, semantic enrichment, and analysis through advanced queries.  
 Ideal for knowledge graph, AI, and information flow automation applications.
 
-## 🔧 Environment Variables
-
-Example organization for multiple environments:
-
-```
-.env.development
-.env.staging
-.env.production
-.env.test
-.env.openai.development
-.env.local
-```
-
-### 🌍 General
-
-| Variable               | Default              | Description                                                                 |
-| ---------------------- | -------------------- | --------------------------------------------------------------------------- |
-| `APP_ENV`              | `development`        | Execution environment (`development`, `staging`, `production`, `test`).     |
-| `COLLECTION_NAME`      | `kgrag_data`         | Name of the collection for data ingestion.                                  |
-
----
-
-### ☁️ AWS S3
-
-| Variable                | Default          | Description                              |
-| ----------------------- | ---------------- | ---------------------------------------- |
-| `AWS_ACCESS_KEY_ID`     | **required**     | AWS access key for S3 access.            |
-| `AWS_SECRET_ACCESS_KEY` | **required**     | AWS secret key for S3 access.            |
-| `AWS_BUCKET_NAME`       | **required**     | Name of the S3 bucket.                   |
-| `AWS_REGION`            | **required**     | AWS region.                              |
-
----
-
-### 🗄️ Neo4j
-
-| Variable         | Default                   | Description                                         |
-| ---------------- | ------------------------- | --------------------------------------------------- |
-| `NEO4J_URL`      | `neo4j://localhost:47687` | Neo4j connection URL.                               |
-| `NEO4J_USERNAME` | `neo4j`                   | Username for Neo4j.                                 |
-| `NEO4J_PASSWORD` | `n304j2025`               | Password for Neo4j.                                 |
-| `NEO4J_DB_NAME`  | *(empty)*                 | Neo4j database name (if different from default).    |
-
----
-
-### 🔄 Redis
-
-| Variable     | Default                  | Description                |
-| ------------ | ------------------------ | -------------------------- |
-| `REDIS_URL`  | `redis://localhost:6379` | Full URL for Redis.        |
-| `REDIS_HOST` | `localhost`              | Redis host.                |
-| `REDIS_PORT` | `6379`                   | Redis port.                |
-| `REDIS_DB`   | `4`                      | Redis database number.     |
-
----
-
-### 🔍 Qdrant
-
-| Variable     | Default                 | Description                |
-| ------------ | ----------------------- | -------------------------- |
-| `QDRANT_URL` | `http://localhost:6333` | Qdrant instance URL.       |
-
----
-
-### 📊 Loki
-
-| Variable   | Default                                  | Description                |
-| ---------- | ---------------------------------------- | -------------------------- |
-| `LOKI_URL` | `http://localhost:3100/loki/api/v1/push` | Loki push URL.             |
-
----
-
-### 🤖 LLM (Large Language Model)
-
-| Variable            | Default                  | Description                                         |
-| ------------------- | ------------------------ | --------------------------------------------------- |
-| `LLM_MODEL_TYPE`    | `openai`                 | Model type (`openai`, `azure`, `local`, etc.).      |
-| `LLM_MODEL_NAME`    | `gpt-4.1-mini`           | Name of the LLM model to use.                       |
-| `LLM_EMBEDDING_URL` | *(empty)*                | Custom embedding endpoint.                          |
-| `MODEL_EMBEDDING`   | `text-embedding-3-small` | Model for embeddings.                               |
-| `LLM_URL`           | *(empty)*                | LLM API endpoint.                                   |
-
----
-
-### 🧠 Vector DB
-
-| Variable                  | Default                  | Description                                 |
-| ------------------------- | ------------------------ | ------------------------------------------- |
-| `VECTORDB_SENTENCE_MODEL` | `BAAI/bge-small-en-v1.5` | Embedding model for vectors.                |
-| `VECTORDB_SENTENCE_TYPE`  | `hf`                     | Model type (`hf`, `local`).                 |
-| `VECTORDB_SENTENCE_PATH`  | *(empty)*                | Local path for vector model.
-
-## ⚙️ Docker
-
-This project uses **Docker Compose** to run the **KGrag Agent** stack.
-The **Makefile** provides quick commands to start, stop, and restart services.
-
----
-
-### 📦 Requirements
-
-* [Docker](https://docs.docker.com/get-docker/) ≥ 20.x
-* [Docker Compose](https://docs.docker.com/compose/) ≥ 2.x
-* [Make](https://www.gnu.org/software/make/)
-
----
-
-### 🚀 Available Commands
-
-#### ▶️ Start the stack
-
-Start all services in **detached** mode (`-d`):
-
-```bash
-make run
-```
-
-Internally runs:
-
-```bash
-docker-compose -p kgrag-agent up -d
-```
-
----
-
-#### ⏹️ Stop the stack
-
-Stops and removes containers defined in `docker-compose.yml`:
-
-```bash
-make stop
-```
-
-Internally runs:
-
-```bash
-docker-compose down
-```
-
----
-
-#### 🔄 Restart the stack
-
-Stops and restarts services:
-
-```bash
-make restart
-```
-
-Equivalent to:
-
-```bash
-make stop && make run
-```
-
----
-
-### 📜 Notes
-
-* The stack uses the **Docker Compose project** named `kgrag-agent`.
-* You can customize services by editing the `docker-compose.yml` file.
-* To view logs in real time:
-
-    ```bash
-    docker-compose -p kgrag-agent logs -f
-    ```
+## [Development](DEV.md)
 
 ## **Tools**
 
-#### `query`
+### `query`
 
 Queries the **Knowledge Graph** to obtain answers based on stored documents and relationships.
 
@@ -183,7 +19,7 @@ Queries the **Knowledge Graph** to obtain answers based on stored documents and 
 
 ---
 
-#### `ingestion`
+### `ingestion`
 
 Ingests a document from the file system into the graph.
 
@@ -192,7 +28,7 @@ Ingests a document from the file system into the graph.
 * `path` (`str`) → Path to the file to ingest.
 
 
-####  `extract_graph_data`
+###  `extract_graph_data`
 
 Extract graph data from a document using the KGraph system
 
@@ -200,7 +36,7 @@ Extract graph data from a document using the KGraph system
 
 * `raw_data` (`str`) → Raw data to process.
 
-####  `parser`
+###  `parser`
 
 Parse a document using the KGraph system.
 
@@ -210,9 +46,9 @@ Parse a document using the KGraph system.
 
 ---
 
-### **Prompts**
+## **Prompts**
 
-#### 📜 `parser_text_prompt`
+### 📜 `parser_text_prompt`
 
 Generates the **prompt** to extract relationships from text.
 
@@ -223,7 +59,7 @@ def parser_text_prompt(text: Optional[str] = None) -> str:
 
 ---
 
-### 🤖 `agent_query_prompt`
+#### 🤖 `agent_query_prompt`
 
 Generates the **prompt** to answer graph-based queries.
 
@@ -239,22 +75,68 @@ Uses the `AGENT_PROMPT` constant and formats data from:
 
 ---
 
-### ⚙️ Server Startup
+## Docker
 
-#### 1️⃣ Install dependencies
+To run the MCP Server using Docker Compose, follow these steps:
 
-```bash
-pip install -r requirements.txt
-```
+1. **Create a `docker-compose.yml` file**  
+    Add the following configuration to your project directory:
 
-#### 2️⃣ Start
+    ```yaml
+    services:
+      kgrag-mcp-server:
+         container_name: kgrag_mcp_server
+         restart: always
+         image: ghcr.io/gzileni/kgrag_mcp_server
+         ports:
+            - "8000:8000"
+         networks:
+            - kgrag-network
+         environment:
+            - APP_ENV=${APP_ENV}
+            - LLM_MODEL_TYPE=${LLM_MODEL_TYPE}
+            - OPENAI_API_KEY=${OPENAI_API_KEY}
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_REGION=${AWS_REGION}
+            - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+            - COLLECTION_NAME=${COLLECTION_NAME}
+            - VECTORDB_SENTENCE_TYPE=${VECTORDB_SENTENCE_TYPE}
+            - VECTORDB_SENTENCE_MODEL=${VECTORDB_SENTENCE_MODEL}
+            - VECTORDB_SENTENCE_PATH=${VECTORDB_SENTENCE_PATH}
+            - NEO4J_USERNAME=${NEO4J_USERNAME}
+            - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+            - NEO4J_AUTH=${NEO4J_AUTH}
+            - NEO4J_URL=${NEO4J_URL}
+            - REDIS_URL=${REDIS_URL}
+            - REDIS_HOST=${REDIS_HOST}
+            - REDIS_PORT=${REDIS_PORT}
+            - REDIS_DB=${REDIS_DB}
+            - QDRANT_URL=${QDRANT_URL}
+            - LLM_MODEL_NAME=${LLM_MODEL_NAME}
+            - MODEL_EMBEDDING=${MODEL_EMBEDDING}
+            - LLM_URL=${LLM_URL}
+    networks:
+      kgrag-network:
+         name: kgrag-network
+         driver: bridge
+         ipam:
+            driver: default
+            config:
+              - subnet: 172.16.99.0/24
+    ```
 
-```bash
-uvicorn mcp_server:app --reload --host 0.0.0.0 --port 8000
-```
+2. **Set environment variables**  
+    Create a `.env` file in the same directory and define all required variables (e.g., `APP_ENV`, `OPENAI_API_KEY`, etc.).
 
----
+3. **Start the MCP Server**  
+    Run the following command in your terminal:
 
-## 🔌 MCP Toolkit 
+    ```bash
+    docker compose up -d
+    ```
+
+This will launch the MCP Server on port `8000` and connect it to the `kgrag-network` bridge.  
+You can now access the server and its services as configured.
 
 

@@ -1,0 +1,43 @@
+
+services:
+
+  kgrag-mcp-server:
+    container_name: kgrag_mcp_server
+    restart: always
+    image: ghcr.io/gzileni/kgrag_mcp_server
+    ports:
+      - "8000:8000"
+    networks:
+      - kgrag-network
+    environment:
+      - APP_ENV=${APP_ENV}
+      - LLM_MODEL_TYPE=${LLM_MODEL_TYPE}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - COLLECTION_NAME=${COLLECTION_NAME}
+      - VECTORDB_SENTENCE_TYPE=${VECTORDB_SENTENCE_TYPE}
+      - VECTORDB_SENTENCE_MODEL=${VECTORDB_SENTENCE_MODEL}
+      - VECTORDB_SENTENCE_PATH=${VECTORDB_SENTENCE_PATH}
+      - NEO4J_USERNAME=${NEO4J_USERNAME}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - NEO4J_AUTH=${NEO4J_AUTH}
+      - NEO4J_URL=${NEO4J_URL}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+      - QDRANT_URL=${QDRANT_URL}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME}
+      - MODEL_EMBEDDING=${MODEL_EMBEDDING}
+      - LLM_URL=${LLM_URL}
+networks:
+  kgrag-network:
+    name: kgrag-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.99.0/24

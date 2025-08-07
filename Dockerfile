@@ -9,7 +9,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt || true
 
-COPY . .
+COPY *.py .
 
 EXPOSE 8000
 
