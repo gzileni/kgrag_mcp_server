@@ -1,6 +1,6 @@
-# Krag MCP Server
+# KGrag MCP Server
 
-**Krag MCP Server** is a modular system for managing, ingesting, and querying structured and unstructured data.  
+**KGrag MCP Server** is a server that implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) for managing, ingesting, and querying structured and unstructured data.
 It is designed for easy integration with graph databases (Neo4j), AWS S3 storage, Redis cache, vector search engines (Qdrant), and advanced language models (LLM).  
 The project provides a scalable, containerized infrastructure via Docker Compose to orchestrate data pipelines, semantic enrichment, and analysis through advanced queries.  
 Ideal for knowledge graph, AI, and information flow automation applications.
