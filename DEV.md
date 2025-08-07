@@ -22,6 +22,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+---
+
 ## 🔧 Environment Variables
 
 Before starting development, copy each `env.xxxx.template` file to its corresponding `.env.xxxx` file. For example:
@@ -55,8 +57,6 @@ Example organization for multiple environments:
 | `APP_ENV`              | `development`        | Execution environment (`development`, `staging`, `production`, `test`).     |
 | `COLLECTION_NAME`      | `kgrag_data`         | Name of the collection for data ingestion.                                  |
 
----
-
 ### ☁️ AWS S3
 
 | Variable                | Default          | Description                              |
@@ -65,8 +65,6 @@ Example organization for multiple environments:
 | `AWS_SECRET_ACCESS_KEY` | **required**     | AWS secret key for S3 access.            |
 | `AWS_BUCKET_NAME`       | **required**     | Name of the S3 bucket.                   |
 | `AWS_REGION`            | **required**     | AWS region.                              |
-
----
 
 ### 🗄️ Neo4j
 
@@ -77,8 +75,6 @@ Example organization for multiple environments:
 | `NEO4J_PASSWORD` | `n304j2025`               | Password for Neo4j.                                 |
 | `NEO4J_DB_NAME`  | *(empty)*                 | Neo4j database name (if different from default).    |
 
----
-
 ### 🔄 Redis
 
 | Variable     | Default                  | Description                |
@@ -88,15 +84,12 @@ Example organization for multiple environments:
 | `REDIS_PORT` | `6379`                   | Redis port.                |
 | `REDIS_DB`   | `4`                      | Redis database number.     |
 
----
-
 ### 🔍 Qdrant
 
 | Variable     | Default                 | Description                |
 | ------------ | ----------------------- | -------------------------- |
 | `QDRANT_URL` | `http://localhost:6333` | Qdrant instance URL.       |
 
----
 
 ### 📊 Loki
 
@@ -104,7 +97,6 @@ Example organization for multiple environments:
 | ---------- | ---------------------------------------- | -------------------------- |
 | `LOKI_URL` | `http://localhost:3100/loki/api/v1/push` | Loki push URL.             |
 
----
 
 ### 🤖 LLM (Large Language Model)
 
@@ -116,7 +108,6 @@ Example organization for multiple environments:
 | `MODEL_EMBEDDING`   | `text-embedding-3-small` | Model for embeddings.                               |
 | `LLM_URL`           | *(empty)*                | LLM API endpoint.                                   |
 
----
 
 ### 🧠 Vector DB
 
@@ -126,20 +117,18 @@ Example organization for multiple environments:
 | `VECTORDB_SENTENCE_TYPE`  | `hf`                     | Model type (`hf`, `local`).                 |
 | `VECTORDB_SENTENCE_PATH`  | *(empty)*                | Local path for vector model.
 
+---
+
 ## ⚙️ Docker
 
 This project uses **Docker Compose** to run the **KGrag Agent** stack.
 The **Makefile** provides quick commands to start, stop, and restart services.
-
----
 
 ### 📦 Requirements
 
 * [Docker](https://docs.docker.com/get-docker/) ≥ 20.x
 * [Docker Compose](https://docs.docker.com/compose/) ≥ 2.x
 * [Make](https://www.gnu.org/software/make/)
-
----
 
 ### 🚀 Available Commands
 
@@ -157,8 +146,6 @@ Internally runs:
 docker-compose -p kgrag-agent up -d
 ```
 
----
-
 #### ⏹️ Stop the stack
 
 Stops and removes containers defined in `docker-compose.yml`:
@@ -173,8 +160,6 @@ Internally runs:
 docker-compose down
 ```
 
----
-
 #### 🔄 Restart the stack
 
 Stops and restarts services:
@@ -188,8 +173,6 @@ Equivalent to:
 ```bash
 make stop && make run
 ```
-
----
 
 ### 📜 Notes
 

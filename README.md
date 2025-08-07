@@ -7,6 +7,8 @@ Ideal for knowledge graph, AI, and information flow automation applications.
 
 ## [Development](DEV.md)
 
+---
+
 ## **Tools**
 
 ### `query`
@@ -16,8 +18,6 @@ Queries the **Knowledge Graph** to obtain answers based on stored documents and 
 **Parameters**:
 
 * `query` (`str`) → Question to ask the graph.
-
----
 
 ### `ingestion`
 
@@ -57,9 +57,7 @@ Generates the **prompt** to extract relationships from text.
 def parser_text_prompt(text: Optional[str] = None) -> str:
 ```
 
----
-
-#### 🤖 `agent_query_prompt`
+### 🤖 `agent_query_prompt`
 
 Generates the **prompt** to answer graph-based queries.
 
