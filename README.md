@@ -171,61 +171,42 @@ make stop && make run
     docker-compose -p kgrag-agent logs -f
     ```
 
-### **Tools**
+## **Tools**
 
-#### 1️⃣ `query`
+#### `query`
 
 Queries the **Knowledge Graph** to obtain answers based on stored documents and relationships.
-
-```python
-@mcp.tool(
-    name="query",
-    description="Ingest a document into the KGraph system."
-)
-```
 
 **Parameters**:
 
 * `query` (`str`) → Question to ask the graph.
-* `thread_id` (`str`) → Session ID (default: auto-generated).
-
-**Example response**:
-
-```json
-{
-    "jsonrpc": "2.0",
-    "result": {
-        "message": "Alan Turing collaborated with John von Neumann."
-    },
-    "id": "uuid-thread-id"
-}
-```
 
 ---
 
-#### 2️⃣ `ingestion_document`
+#### `ingestion`
 
 Ingests a document from the file system into the graph.
 
-```python
-@mcp.tool(
-    name="ingestion_document",
-    description="Ingest a path of file into the KGraph system."
-)
-```
+**Parameters**:
+
+* `path` (`str`) → Path to the file to ingest.
+
+
+####  `extract_graph_data`
+
+Extract graph data from a document using the KGraph system
 
 **Parameters**:
 
-* `path_file` (`str`) → Path to the file to ingest.
-* `force` (`bool`) → True if force ingestion file
+* `raw_data` (`str`) → Raw data to process.
 
-**Example**:
+####  `parser`
 
-```json
-"Document example.pdf ingested successfully."
-```
+Parse a document using the KGraph system.
 
-### extract_graph
+**Parameters**:
+
+* `text` (`str`) → Text to be parsed.
 
 ---
 
@@ -274,6 +255,6 @@ uvicorn mcp_server:app --reload --host 0.0.0.0 --port 8000
 
 ---
 
-### 🔌 MCP Client Configuration
+## 🔌 MCP Toolkit 
 
 

@@ -2,7 +2,8 @@ import os
 from mcp.server.fastmcp import FastMCP, Context
 from kgrag_store import (
     parser_prompt,
-    query_prompt
+    query_prompt,
+    GraphComponents
 )
 from starlette.applications import Starlette
 from starlette.routing import Mount
@@ -11,6 +12,62 @@ from typing import Optional
 
 # Initialize FastMCP server
 mcp = FastMCP("KGraph")
+
+
+@mcp.tool(
+    title="Extract Graph Data",
+    name="extract_graph_data",
+    description="Extract graph data from a document using the KGraph system."
+)
+async def extract_graph_data(
+    raw_data: str,
+    ctx: Context
+) -> tuple[dict[str, str], list[dict[str, str]]]:
+    """
+    Extract graph data from a document using the KGraph system.
+    Args:
+        raw_data (str): Raw data to be processed.
+        ctx (Context): Context for logging and reporting progress.
+    Returns:
+        tuple: A tuple containing a dictionary of nodes and a list of edges.
+    """
+    if not isinstance(raw_data, str):
+        return {}, []
+
+    nodes, relationships = await kgrag.extract_graph_components(raw_data)
+    await ctx.info(f"Extracted Graph Data: {nodes}, {relationships}")
+    return nodes, relationships
+
+
+@mcp.tool(
+    title="KGrag Parser",
+    name="parser",
+    description="Parse a document using the KGraph system.",
+)
+async def parser(
+    text: str,
+    ctx: Context,
+    prompt_user: Optional[str] = None
+) -> GraphComponents | str:
+    """
+    Parse a document using the KGraph system.
+    Args:
+        text (str): Text to be parsed.
+        ctx (Context): Context for logging and reporting progress.
+    Returns:
+        str: Parsed relationships in JSON format.
+    """
+    if not isinstance(text, str):
+        return "text must be a string."
+    if not text.strip():
+        return "text cannot be an empty string."
+
+    components = await kgrag.llm_parser(
+        prompt_text=text,
+        prompt_user=prompt_user
+    )
+    await ctx.info(f"Parsed Relationships: {components}")
+    return components
 
 
 @mcp.tool(
@@ -38,10 +95,10 @@ async def query(
 
 @mcp.tool(
     title="Ingest",
-    name="ingestion_document",
+    name="ingestion",
     description="Ingest a path of file into the KGraph system."
 )
-async def ingestion_document(
+async def ingestion(
     path: str,
     ctx: Context
 ):

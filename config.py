@@ -64,7 +64,7 @@ def get_environment() -> Environment:
         Environment: The current environment
         (development, staging, production, or test)
     """
-    match os.getenv("APP_ENV", "development").lower():
+    match os.getenv("APP_ENV", "production").lower():
         case "production" | "prod":
             return Environment.PRODUCTION
         case "staging" | "stage":
@@ -189,8 +189,7 @@ class Settings:
         """
         # Set the environment
         self.ENVIRONMENT = get_environment()
-        self.APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
-        self.USER_AGENT = os.getenv("USER_AGENT", "AI Agent for Arxiv")
+        self.APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
 
         self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
         self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -198,10 +197,12 @@ class Settings:
         self.AWS_REGION = os.getenv('AWS_REGION')
 
         self.COLLECTION_NAME = os.getenv('COLLECTION_NAME', 'kgrag_data')
+        logger.info(f"Collection Name: {self.COLLECTION_NAME}")
 
         self.PATH_DOWNLOAD = get_path_ingestion(
             f"{self.COLLECTION_NAME}"
         )
+        logger.info(f"Path Download: {self.PATH_DOWNLOAD}")
 
         # Neo4j settings
         self.NEO4J_URL = os.getenv('NEO4J_URL', 'neo4j://localhost:7687')
@@ -210,7 +211,8 @@ class Settings:
         self.NEO4J_DB_NAME = os.getenv('NEO4J_DB_NAME', None)
         logger.info(f"Neo4j URL: {self.NEO4J_URL}")
         logger.info(f"Neo4j Username: {self.NEO4J_USERNAME}")
-        logger.info(f"Neo4j DB Name: {self.NEO4J_DB_NAME}")
+        if self.NEO4J_DB_NAME:
+            logger.info(f"Neo4j DB Name: {self.NEO4J_DB_NAME}")
 
         # Redis settings
         self.REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
@@ -229,36 +231,44 @@ class Settings:
             'LOKI_URL',
             'http://localhost:3100/loki/api/v1/push'
         )
-        self.MAX_RECURSION_LIMIT = os.getenv("MAX_RECURSION_LIMIT", 25)
+        logger.info(f"Loki URL: {self.LOKI_URL}")
 
         self.LLM_MODEL_TYPE = os.getenv('LLM_MODEL_TYPE', 'openai')
         load_env_llm(self.LLM_MODEL_TYPE)
+        logger.info(f"LLM Model Type: {self.LLM_MODEL_TYPE}")
         self.LLM_MODEL_NAME = os.getenv('LLM_MODEL_NAME', 'gpt-4.1-mini')
+        logger.info(f"LLM Model Name: {self.LLM_MODEL_NAME}")
         self.LLM_EMBEDDING_URL = os.getenv(
             "LLM_EMBEDDING_URL",
             None
         )
+        if self.LLM_EMBEDDING_URL:
+            logger.info(f"LLM Embedding URL: {self.LLM_EMBEDDING_URL}")
         self.MODEL_EMBEDDING = os.getenv(
             "MODEL_EMBEDDING",
             "text-embedding-3-small"
         )
+        logger.info(f"Model Embedding: {self.MODEL_EMBEDDING}")
         # LLM settings
         self.LLM_URL = os.getenv("LLM_URL", None)
+        if self.LLM_URL:
+            logger.info(f"LLM URL: {self.LLM_URL}")
 
         self.VECTORDB_SENTENCE_MODEL = os.getenv(
             "VECTORDB_SENTENCE_MODEL",
             "BAAI/bge-small-en-v1.5"
         )
+        logger.info(f"VectorDB Sentence Model: {self.VECTORDB_SENTENCE_MODEL}")
         self.VECTORDB_SENTENCE_TYPE = os.getenv(
             "VECTORDB_SENTENCE_TYPE",
             "hf"
         )
+        logger.info(f"VectorDB Sentence Type: {self.VECTORDB_SENTENCE_TYPE}")
         self.VECTORDB_SENTENCE_PATH = os.getenv("VECTORDB_SENTENCE_PATH", None)
-
-        self.MCP_SERVER_URL = os.getenv(
-            "MCP_SERVER_URL",
-            "http://localhost:8000/sse"
-        )
+        if self.VECTORDB_SENTENCE_PATH:
+            logger.info(
+                f"VectorDB Sentence Path: {self.VECTORDB_SENTENCE_PATH}"
+            )
 
         # Apply environment-specific settings
         self.apply_environment_settings()
