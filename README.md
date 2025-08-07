@@ -1,9 +1,14 @@
 # Krag MCP Server
 
-Krag MCP Server is a modular system for managing, ingesting, and querying structured and unstructured data.  
+**Krag MCP Server** is a modular system for managing, ingesting, and querying structured and unstructured data.  
 It is designed for easy integration with graph databases (Neo4j), AWS S3 storage, Redis cache, vector search engines (Qdrant), and advanced language models (LLM).  
 The project provides a scalable, containerized infrastructure via Docker Compose to orchestrate data pipelines, semantic enrichment, and analysis through advanced queries.  
 Ideal for knowledge graph, AI, and information flow automation applications.
+
+## Dependencies
+
+- [`kgrag-store`](https://github.com/gzileni/kgrag-store): Core data storage and graph management library.
+- [`memory-agent`](https://github.com/gzileni/memory-agent): A Python library for advanced memory management in AI agent applications
 
 ## [Development](DEV.md)
 
