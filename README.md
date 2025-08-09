@@ -5,7 +5,7 @@ It is designed for easy integration with graph databases (Neo4j), AWS S3 storage
 The project provides a scalable, containerized infrastructure via Docker Compose to orchestrate data pipelines, semantic enrichment, and analysis through advanced queries.  
 Ideal for knowledge graph, AI, and information flow automation applications.
 
-## Example: Ingestion with GitHub Copilot in VSCode (Agent Mode)
+## Example: Ingestion and Query with GitHub Copilot in VSCode (Agent Mode)
 
 You can use GitHub Copilot in VSCode to interactively ingest documents into the MCP Server using an agent-based workflow and a configuration file.
 
@@ -30,18 +30,7 @@ You can use GitHub Copilot in VSCode to interactively ingest documents into the 
 
 This workflow enables rapid prototyping and automation of ingestion tasks with Copilot's agent capabilities and a configurable server endpoint.
 
-<video width="600" controls>
-  <source src="./ingestion.mp4" type="video/mp4">
-  Il tuo browser non supporta il tag video.
-</video>
-
-### Example: Query
-
-<video width="600" controls>
-  <source src="./query.mov" type="video/mp4">
-  Il tuo browser non supporta il tag video.
-</video>
-
+![kgrag](./kgrag-mcp-server.gif)
 
 ---
 
