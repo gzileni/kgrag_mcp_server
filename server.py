@@ -71,16 +71,16 @@ async def parser(
 
 
 @mcp.tool(
-    title="Query",
+    title="Query KGraph",
     name="query",
-    description="Ingest a document into the KGraph system."
+    description="Query the KGraph system with a specific query string."
 )
 async def query(
     query: str,
     ctx: Context
 ):
     """
-    Ingest a document into the KGraph system.
+    Query the KGraph system with a specific query string.
     Args:
         query (str): Query for the document to be ingested.
     """
@@ -89,8 +89,7 @@ async def query(
     if not query.strip():
         return "query cannot be an empty string."
 
-    async for r in kgrag.query_stream(query):
-        await ctx.info(r)
+    return await kgrag.query(query)
 
 
 @mcp.tool(

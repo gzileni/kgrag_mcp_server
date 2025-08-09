@@ -5,10 +5,45 @@ It is designed for easy integration with graph databases (Neo4j), AWS S3 storage
 The project provides a scalable, containerized infrastructure via Docker Compose to orchestrate data pipelines, semantic enrichment, and analysis through advanced queries.  
 Ideal for knowledge graph, AI, and information flow automation applications.
 
+## Example: Ingestion with GitHub Copilot in VSCode (Agent Mode)
+
+You can use GitHub Copilot in VSCode to interactively ingest documents into the MCP Server using an agent-based workflow and a configuration file.
+
+**Step-by-step:**
+
+1. **Open VSCode** and ensure GitHub Copilot is enabled.
+2. **Create an `mcp.json` configuration file** in your project directory:
+
+```json
+{
+	"servers": {
+		"kgrag-server": {
+			"url": "http://localhost:8000/sse",
+			"type": "sse"
+		}
+	},
+	"inputs": []
+}
+```
+
+3. **Let Copilot suggest ingestion code and improvements** such as error handling or batch processing, using the configuration from `mcp.json`.
+
+This workflow enables rapid prototyping and automation of ingestion tasks with Copilot's agent capabilities and a configurable server endpoint.
+
+![ingestion](./ingestion.mp4)
+
+### Example: Query
+
+![query](./query.mov)
+
+---
+
 ## Dependencies
 
 - [`kgrag-store`](https://github.com/gzileni/kgrag-store): Core data storage and graph management library.
 - [`memory-agent`](https://github.com/gzileni/memory-agent): A Python library for advanced memory management in AI agent applications
+
+---
 
 ## [Development](DEV.md)
 
