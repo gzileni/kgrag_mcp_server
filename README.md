@@ -30,11 +30,18 @@ You can use GitHub Copilot in VSCode to interactively ingest documents into the 
 
 This workflow enables rapid prototyping and automation of ingestion tasks with Copilot's agent capabilities and a configurable server endpoint.
 
-![ingestion](./ingestion.mp4)
+<video width="600" controls>
+  <source src="./ingestion.mp4" type="video/mp4">
+  Il tuo browser non supporta il tag video.
+</video>
 
 ### Example: Query
 
-![query](./query.mov)
+<video width="600" controls>
+  <source src="./query.mov" type="video/mp4">
+  Il tuo browser non supporta il tag video.
+</video>
+
 
 ---
 
