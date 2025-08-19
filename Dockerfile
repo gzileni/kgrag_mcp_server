@@ -1,19 +1,85 @@
-FROM python:3.12-slim-bullseye
+ARG BASE_IMAGE_CPU=qdrant/qdrant:v1.15.0
+ARG BASE_IMAGE_GPU=qdrant/qdrant:gpu-nvidia-latest
+ARG PLATFORM=cpu
+
+# === Stage per CPU ===
+FROM ${BASE_IMAGE_CPU} AS base_cpu
+
+# === Stage per GPU ===
+FROM ${BASE_IMAGE_GPU} AS base_gpu
+
+# === Seleziona lo stage finale ===
+ARG PLATFORM
+FROM base_${PLATFORM} AS final
+
+# QDrant port
+EXPOSE 6333
+EXPOSE 6334
+
+ENV \
+  NEO4J_PLUGINS='["apoc"]' \
+  NEO4J_apoc_export_file_enabled=true \
+  NEO4J_apoc_import_file_enabled=true \
+  NEO4J_apoc_import_file_use__neo4j__config=true \
+  USER_AGENT="KGrag Agent" \
+  APP_VERSION="1.0.0" \
+  APP_ENV="production" \
+  VECTORDB_SENTENCE_TYPE="hf" \
+  VECTORDB_SENTENCE_MODEL="BAAI/bge-small-en-v1.5" \
+  MAX_RECURSION_LIMIT=25 \
+  QDRANT_URL="http://localhost:6333" \
+  REDIS_URL="redis://localhost:6379" \
+  REDIS_HOST="localhost" \
+  REDIS_PORT=6379 \
+  REDIS_DB=10
+
+# Installazione di Redis
+RUN apt-get update && \
+    apt-get install -y lsb-release curl gpg wget && \
+    curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg && \
+    chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" > /etc/apt/sources.list.d/redis.list && \
+    apt-get install -y supervisor redis redis-server && \
+    mkdir -p /var/log/supervisor
+
+# Redis port
+EXPOSE 6379
+
+# Neo4j Installation
+RUN wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
+RUN echo 'deb https://debian.neo4j.com stable 5' | tee /etc/apt/sources.list.d/neo4j.list && \
+    apt-get update
+RUN apt-get install neo4j -y
+COPY neo4j.conf /etc/neo4j/neo4j.conf
+
+# Neo4J ports
+EXPOSE 7474
+EXPOSE 7687
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        lsb-release \
+        build-essential \
+        python3 \
+        python3-pip \
+        python3-venv \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Crea un virtual env e attivalo
+RUN python3 -m venv /app/venv
+ENV PATH="/app/venv/bin:$PATH"
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt || true
-
+# Installa pacchetti nel venv
+RUN pip install --no-cache-dir uv
+COPY requirements.txt .
 COPY *.py .
+RUN pip install --no-cache-dir -r requirements.txt || true
 
 EXPOSE 8000
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
-# ENTRYPOINT ["sh", "-c", "uvicorn main:app --host=$UVICORN_HOST --port=$UVICORN_PORT --log-level=$UVICORN_LOG_LEVEL --workers=$UVICORN_WORKERS"]
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
