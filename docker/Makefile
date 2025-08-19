@@ -1,12 +1,12 @@
 .PHONY: run stop restart
 
 run:
-	echo "Running stack agent ..."
-	docker-compose -p kgrag-agent up -d
+	echo "Running stack mcp server ..."
+	docker-compose -p kgrag-mcp-server up -d
 
 stop:
-	echo "Stopping qdrant ..."
-	docker-compose down
+	echo "Stopping mcp server ..."
+	docker-compose -p kgrag-mcp-server down
 
 restart: stop run
 	echo "All services are restarted"
