@@ -13,8 +13,7 @@ ARG PLATFORM
 FROM base_${PLATFORM} AS final
 
 # QDrant port
-EXPOSE 6333
-EXPOSE 6334
+EXPOSE 6333 6334
 
 ENV \
   NEO4J_PLUGINS='["apoc"]' \
@@ -42,6 +41,8 @@ RUN apt-get update && \
     apt-get install -y supervisor redis redis-server && \
     mkdir -p /var/log/supervisor
 
+COPY qdrant.yml /etc/qdrant/config.yml
+
 # Redis port
 EXPOSE 6379
 
@@ -53,8 +54,7 @@ RUN apt-get install neo4j -y
 COPY neo4j.conf /etc/neo4j/neo4j.conf
 
 # Neo4J ports
-EXPOSE 7474
-EXPOSE 7687
+EXPOSE 7474 7687
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \

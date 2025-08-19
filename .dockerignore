@@ -1,6 +1,5 @@
 docker/
 .env*
-*.yml
 *.sh
 env.*
 .github/

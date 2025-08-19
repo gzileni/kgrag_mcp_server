@@ -36,10 +36,8 @@ services:
       - LOKI_URL=http://kgrag-mcp-loki:3100/loki/api/v1/push
     volumes:
       - qdrant_data:/qdrant/storage:z
-      - ./qdrant/config.yml:/qdrant/config.yml:ro
       - redis_data:/data
       - neo4j_data:/var/lib/neo4j/data
-      - ./neo4j.conf:/etc/neo4j/neo4j.conf:ro
 
   kgrag-mcp-loki:
     container_name: kgrag-mcp-loki
