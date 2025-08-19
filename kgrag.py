@@ -29,5 +29,6 @@ kgrag = KGragRetriever(
     qdrant_url=settings.QDRANT_URL,
     redis_host=settings.REDIS_HOST,
     redis_port=settings.REDIS_PORT,
-    redis_db=settings.REDIS_DB
+    redis_db=settings.REDIS_DB,
+    api_key=settings.OPENAI_API_KEY
 )

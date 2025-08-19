@@ -190,6 +190,7 @@ class Settings:
         # Set the environment
         self.ENVIRONMENT = get_environment()
         self.APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
+        self.OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", None)
 
         self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
         self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
