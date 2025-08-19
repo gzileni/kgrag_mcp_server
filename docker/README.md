@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Docker Compose setup provides a multi-service environment for the `kgrag-mcp-server` application, including logging and monitoring tools.
+This [Docker Compose](./docker-compose.yml) setup provides a multi-service environment for the `kgrag-mcp-server` application from image `ghcr.io/gzileni/kgrag_mcp_server`, including logging and monitoring tools.
 
 ## Services
 
