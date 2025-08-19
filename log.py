@@ -30,11 +30,13 @@ def get_logger(**kwargs) -> logging.Logger:
 
     name = kwargs.get("name", os.getenv("APP_NAME", "logger"))
     loki_url: str | None = kwargs.get("loki_url", os.getenv("LOKI_URL"))
-    level = kwargs.get("level", os.getenv("LOG_LEVEL", "DEBUG"))
+    level = kwargs.get("level", os.getenv("LOG_LEVEL", "DEBUG")).upper()
     service = kwargs.get("service", os.getenv("APP_SERVICE", "logger_service"))
     version = kwargs.get("version", os.getenv("APP_VERSION", "1.0.0"))
 
     logger = logging.getLogger(name)
+    if logger.hasHandlers():
+        logger.handlers.clear()
 
     if level not in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
         msg: str = (
