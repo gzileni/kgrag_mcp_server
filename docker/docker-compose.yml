@@ -4,11 +4,23 @@ services:
   kgrag-mcp-server:
     container_name: kgrag_mcp_server
     restart: always
-    image: ghcr.io/gzileni/kgrag_mcp_server
+    image: ghcr.io/gzileni/kgrag_mcp_server:main
     ports:
       - "8000:8000"
+      - "6379:6379"   # Redis
+      - "6333:6333"   # QDrant
+      - "6334:6334"   # QDrant
+      - "7474:7474"   # HTTP - Neo4j
+      - "7687:7687"   # Bolt - Neo4J
+    expose:
+      - "8000"
+      - "6379"
+      - "6333"
+      - "6334"
+      - "7474"
+      - "7687"
     networks:
-      - kgrag-network
+      - kgrag-mcp-network
     environment:
       - APP_ENV=${APP_ENV}
       - LLM_MODEL_TYPE=${LLM_MODEL_TYPE}
@@ -22,6 +34,12 @@ services:
       - MODEL_EMBEDDING=${MODEL_EMBEDDING}
       - LLM_URL=${LLM_URL}
       - LOKI_URL=http://kgrag-mcp-loki:3100/loki/api/v1/push
+    volumes:
+      - qdrant_data:/qdrant/storage:z
+      - ./qdrant/config.yml:/qdrant/config.yml:ro
+      - redis_data:/data
+      - neo4j_data:/var/lib/neo4j/data
+      - ./neo4j.conf:/etc/neo4j/neo4j.conf:ro
 
   kgrag-mcp-loki:
     container_name: kgrag-mcp-loki
@@ -30,16 +48,16 @@ services:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     networks:
-      - kgrag-network
+      - kgrag-mcp-network
 
   kgrag-mcp-promtail:
     container_name: kgrag-mcp-promtail
     image: grafana/promtail:latest
     volumes:
-      - loki-log:/var/log
+      - loki_log:/var/log
     command: -config.file=/etc/promtail/config.yml
     networks:
-      - kgrag-network
+      - kgrag-mcp-network
 
   kgrag-mcp-grafana:
     container_name: kgrag-grafana
@@ -69,11 +87,18 @@ services:
         /run.sh
     image: grafana/grafana:latest
     volumes:
-      - grafana-data:/var/lib/grafana  # Volume persistente per i dati di Grafana
+      - grafana_data:/var/lib/grafana  # Volume persistente per i dati di Grafana
     ports:
       - "3000:3000"
     networks:
       - kgrag-mcp-network
+
+volumes:
+  qdrant_data:
+  redis_data:
+  neo4j_data:
+  grafana_data:
+  loki_log:
 
 networks:
   kgrag-mcp-network:
