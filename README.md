@@ -1,4 +1,7 @@
-# [KGrag MCP Server](https://github.com/gzileni/kgrag_mcp_server)
+[![View on GitHub](https://img.shields.io/badge/View%20on-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/gzileni/kgrag_mcp_server)
+[![GitHub stars](https://img.shields.io/github/stars/gzileni/kgrag_mcp_server?style=social)](https://github.com/gzileni/kgrag_mcp_server/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/gzileni/kgrag_mcp_server?style=social)](https://github.com/gzileni/kgrag_mcp_server/network)
+
 
 ![KGRAG](./KGRAG-MCP-SERVER.png)
 
