@@ -41,8 +41,8 @@ This workflow enables rapid prototyping and automation of ingestion tasks with C
 
 ## Dependencies
 
-- [`kgrag-store`](https://github.com/gzileni/kgrag-store): Core data storage and graph management library.
-- [`memory-agent`](https://github.com/gzileni/memory-agent): A Python library for advanced memory management in AI agent applications
+- [`kgrag-store`](https://gzileni.github.io/kgrag-store/): Core data storage and graph management library.
+- [`memory-agent`](https://gzileni.github.io/memory-agent): A Python library for advanced memory management in AI agent applications
 
 ---
 
