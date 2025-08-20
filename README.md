@@ -1,4 +1,4 @@
-# KGrag MCP Server
+# [KGrag MCP Server](https://github.com/gzileni/kgrag_mcp_server)
 
 ![KGRAG](./KGRAG-MCP-SERVER.png)
 
