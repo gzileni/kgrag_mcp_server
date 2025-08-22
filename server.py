@@ -7,11 +7,17 @@ from kgrag_store import (
 )
 from starlette.applications import Starlette
 from starlette.routing import Mount
+from starlette.responses import PlainTextResponse
+from starlette.routing import Route
 from kgrag import kgrag
 from typing import Optional
 
 # Initialize FastMCP server
 mcp = FastMCP("KGraph")
+
+
+async def health(_):
+    return PlainTextResponse("ok")
 
 
 @mcp.tool(
@@ -22,7 +28,7 @@ mcp = FastMCP("KGraph")
 async def extract_graph_data(
     raw_data: str,
     ctx: Context
-) -> tuple[dict[str, str], list[dict[str, str]]]:
+) -> dict:
     """
     Extract graph data from a document using the KGraph system.
     Args:
@@ -36,7 +42,7 @@ async def extract_graph_data(
 
     nodes, relationships = await kgrag.extract_graph_components(raw_data)
     await ctx.info(f"Extracted Graph Data: {nodes}, {relationships}")
-    return nodes, relationships
+    return {"nodes": nodes, "relationships": relationships}
 
 
 @mcp.tool(
@@ -48,7 +54,7 @@ async def parser(
     text: str,
     ctx: Context,
     prompt_user: Optional[str] = None
-) -> GraphComponents | str:
+):
     """
     Parse a document using the KGraph system.
     Args:
@@ -67,7 +73,9 @@ async def parser(
         prompt_user=prompt_user
     )
     await ctx.info(f"Parsed Relationships: {components}")
-    return components
+    if isinstance(components, (str, dict, list)):
+        return components
+    return components.model_dump()
 
 
 @mcp.tool(
@@ -76,7 +84,7 @@ async def parser(
     description="Query the KGraph system with a specific query string."
 )
 async def query(
-    query: str,
+    q: str,
     ctx: Context
 ):
     """
@@ -84,12 +92,13 @@ async def query(
     Args:
         query (str): Query for the document to be ingested.
     """
-    if not isinstance(query, str):
+    if not isinstance(q, str):
         return "query must be a string."
-    if not query.strip():
+    if not q.strip():
         return "query cannot be an empty string."
 
-    return await kgrag.query(query)
+    await ctx.info(f"Querying KGraph: {q}")
+    return await kgrag.query(q)
 
 
 @mcp.tool(
@@ -166,6 +175,7 @@ def agent_query_prompt(
 # Mount the SSE server to the existing ASGI server
 app = Starlette(
     routes=[
-        Mount('/', app=mcp.sse_app()),
+        Route("/healthz", endpoint=health),
+        Mount("/sse", app=mcp.sse_app()),
     ]
 )
