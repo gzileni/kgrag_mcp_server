@@ -175,6 +175,6 @@ def agent_query_prompt(
 app = Starlette(
     routes=[
         Route("/healthz", endpoint=health),
-        Mount("/sse", app=mcp.sse_app()),
+        Mount("/", app=mcp.sse_app()),
     ]
 )
