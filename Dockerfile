@@ -67,15 +67,22 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-# Crea un virtual env e attivalo
+# Crea un virtualenv
 RUN python3 -m venv /app/venv
+
+# Copia requirements prima per sfruttare la cache
+COPY requirements.txt .
+
+# Attiva il venv con source (POSIX '.') e installa i pacchetti
+RUN . /app/venv/bin/activate && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt uv uvicorn
+
+# Metti il venv nel PATH per i layer successivi
 ENV PATH="/app/venv/bin:$PATH"
 
-# Installa pacchetti nel venv
-RUN pip install --no-cache-dir uv
-COPY requirements.txt .
+# Copia i sorgenti
 COPY *.py .
-RUN pip install --no-cache-dir -r requirements.txt || true
 
 EXPOSE 8000
 
