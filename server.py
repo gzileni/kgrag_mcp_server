@@ -2,8 +2,7 @@ import os
 from mcp.server.fastmcp import FastMCP, Context
 from kgrag_store import (
     parser_prompt,
-    query_prompt,
-    GraphComponents
+    query_prompt
 )
 from starlette.applications import Starlette
 from starlette.routing import Mount
