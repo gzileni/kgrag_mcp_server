@@ -109,10 +109,8 @@ Security and operational notes:
 
 1. Clone the repository and navigate to the `docker` directory.
 2. Create a `.env` file with the required environment variables.
-3. Start the services:
-    ```bash
-    docker compose up -d
-    ```
+3. Start the services `make run PLATFORM=gpu` or `make run PLATFORM=cpu`
+
 4. Access:
     - Application: [http://localhost:8000](http://localhost:8000)
     - Grafana: [http://localhost:3000](http://localhost:3000)

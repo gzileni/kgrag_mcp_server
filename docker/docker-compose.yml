@@ -1,10 +1,52 @@
 
 services:
 
-  kgrag-mcp-server:
-    container_name: kgrag_mcp_server
+  kgrag-mcp-server-cpu:
+    container_name: kgrag_mcp_server_cpu
+    profiles:
+      - cpu
     restart: always
-    image: ghcr.io/gzileni/kgrag_mcp_server:main
+    image: ghcr.io/gzileni/kgrag_mcp_server:cpu
+    ports:
+      - "8000:8000"
+      - "6379:6379"   # Redis
+      - "6333:6333"   # QDrant
+      - "6334:6334"   # QDrant
+      - "7474:7474"   # HTTP - Neo4j
+      - "7687:7687"   # Bolt - Neo4J
+    expose:
+      - "8000"
+      - "6379"
+      - "6333"
+      - "6334"
+      - "7474"
+      - "7687"
+    networks:
+      - kgrag-mcp-network
+    environment:
+      - APP_ENV=${APP_ENV}
+      - LLM_MODEL_TYPE=${LLM_MODEL_TYPE}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - COLLECTION_NAME=${COLLECTION_NAME}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME}
+      - MODEL_EMBEDDING=${MODEL_EMBEDDING}
+      - LLM_URL=${LLM_URL}
+      - LOKI_URL=http://kgrag-mcp-loki:3100/loki/api/v1/push
+    volumes:
+      - qdrant_data:/qdrant/storage:z
+      - redis_data:/data
+      - neo4j_data:/var/lib/neo4j/data
+
+  kgrag-mcp-server-gpu:
+    container_name: kgrag_mcp_server_gpu
+    profiles:
+      - gpu
+    restart: always
+    image: ghcr.io/gzileni/kgrag_mcp_server:gpu
     ports:
       - "8000:8000"
       - "6379:6379"   # Redis
@@ -41,6 +83,8 @@ services:
 
   kgrag-mcp-loki:
     container_name: kgrag-mcp-loki
+    profiles:
+      - all
     image: grafana/loki:latest
     ports:
       - "3100:3100"
@@ -50,6 +94,8 @@ services:
 
   kgrag-mcp-promtail:
     container_name: kgrag-mcp-promtail
+    profiles:
+      - all
     image: grafana/promtail:latest
     volumes:
       - loki_log:/var/log
@@ -59,6 +105,8 @@ services:
 
   kgrag-mcp-grafana:
     container_name: kgrag-grafana
+    profiles:
+      - all
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true

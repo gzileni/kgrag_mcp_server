@@ -1,13 +1,19 @@
 .PHONY: run stop restart
 
+PLATFORM ?= cpu
+
+ifeq ($(filter $(PLATFORM),cpu gpu),)
+$(error PLATFORM must be 'cpu' or 'gpu' (got '$(PLATFORM)'))
+endif
+
 run:
-	echo "Running stack mcp server ..."
-	docker-compose -p kgrag-mcp-server pull
-	docker-compose -p kgrag-mcp-server up -d
+	@echo "Running stack mcp server ... (platform=$(PLATFORM))"
+	@docker-compose -p kgrag-mcp-server --profiles all --profiles $(PLATFORM) pull
+	@docker-compose -p kgrag-mcp-server --profiles all --profiles $(PLATFORM) up -d
 
 stop:
-	echo "Stopping mcp server ..."
-	docker-compose -p kgrag-mcp-server down
+	@echo "Stopping mcp server ... (platform=$(PLATFORM))"
+	@docker-compose -p kgrag-mcp-server --profiles all --profiles $(PLATFORM) down
 
 restart: stop run
-	echo "All services are restarted"
+	@echo "All services are restarted (platform=$(PLATFORM))"
