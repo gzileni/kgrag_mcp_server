@@ -1,5 +1,5 @@
-ARG BASE_IMAGE_CPU=ghcr.io/gzileni/kgrag-store:cpu
-ARG BASE_IMAGE_GPU=ghcr.io/gzileni/kgrag-store:gpu
+ARG BASE_IMAGE_CPU=ghcr.io/gzileni/memory-agent:cpu
+ARG BASE_IMAGE_GPU=ghcr.io/gzileni/memory-agent:gpu
 ARG PLATFORM=cpu
 
 # === Stage per CPU ===
@@ -16,7 +16,7 @@ FROM base_${PLATFORM} AS final
 EXPOSE 6333 6334
 
 ENV \
-  USER_AGENT="KGrag Agent" \
+  USER_AGENT="KGrag MCP Server" \
   APP_VERSION="1.0.0" \
   APP_ENV="production" 
 
@@ -31,7 +31,8 @@ COPY requirements.txt .
 # Attiva il venv con source (POSIX '.') e installa i pacchetti
 RUN . /app/venv/bin/activate && \
     pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt uv uvicorn
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install uv uvicorn
 
 # Metti il venv nel PATH per i layer successivi
 ENV PATH="/app/venv/bin:$PATH"
