@@ -2,11 +2,11 @@
 services:
 
   kgrag-mcp-server-cpu:
-    container_name: kgrag_mcp_server_cpu
+    container_name: kgrag-mcp-server-cpu
     profiles:
       - cpu
     restart: always
-    image: ghcr.io/gzileni/kgrag_mcp_server:cpu
+    image: ghcr.io/gzileni/kgrag-mcp-server:cpu
     ports:
       - "8000:8000"
       - "6379:6379"   # Redis
@@ -42,11 +42,11 @@ services:
       - neo4j_data:/var/lib/neo4j/data
 
   kgrag-mcp-server-gpu:
-    container_name: kgrag_mcp_server_gpu
+    container_name: kgrag-mcp-server-gpu
     profiles:
       - gpu
     restart: always
-    image: ghcr.io/gzileni/kgrag_mcp_server:gpu
+    image: ghcr.io/gzileni/kgrag-mcp-server:gpu
     ports:
       - "8000:8000"
       - "6379:6379"   # Redis
@@ -81,10 +81,47 @@ services:
       - redis_data:/data
       - neo4j_data:/var/lib/neo4j/data
 
+  kgrag-dev-cpu:
+    container_name: kgrag-dev-cpu
+    profiles:
+      - dev
+    restart: always
+    image: ghcr.io/gzileni/memory-agent:cpu
+    ports:
+      - "6379:6379" # Redis
+      - "6333:6333" # QDrant
+      - "6334:6334" # QDrant
+      - "7474:7474" # HTTP - Neo4j
+      - "7687:7687" # Bolt - Neo4J
+    expose:
+      - "6379"
+      - "6333"
+      - "6334"
+      - "7474"
+      - "7687"
+    networks:
+      - kgrag-mcp-network
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - COLLECTION_NAME=${COLLECTION_NAME}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME}
+      - MODEL_EMBEDDING=${MODEL_EMBEDDING}
+      - LLM_URL=${LLM_URL}
+      - LOKI_URL=http://kgrag-mcp-loki:3100/loki/api/v1/push
+    volumes:
+      - qdrant_data:/qdrant/storage:z
+      - redis_data:/data
+      - neo4j_data:/var/lib/neo4j/data
+
   kgrag-mcp-loki:
     container_name: kgrag-mcp-loki
     profiles:
       - all
+      - dev
     image: grafana/loki:latest
     ports:
       - "3100:3100"
@@ -96,6 +133,7 @@ services:
     container_name: kgrag-mcp-promtail
     profiles:
       - all
+      - dev
     image: grafana/promtail:latest
     volumes:
       - loki_log:/var/log
@@ -107,6 +145,7 @@ services:
     container_name: kgrag-grafana
     profiles:
       - all
+      - dev
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true

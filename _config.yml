@@ -1,7 +1,7 @@
 theme: minima
 title: Kgrag MCP Server
 author: Giuseppe Zileni
-email: gzileni@hotmail.com
+email: giuseppe.zileni@gmail.com
 description: >-
   Krag MCP Server is a modular system for managing, ingesting, and querying structured and unstructured data.  
   It is designed for easy integration with graph databases (Neo4j), AWS S3 storage, Redis cache, vector search engines (Qdrant), and advanced language models (LLM).  

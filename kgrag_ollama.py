@@ -1,24 +1,15 @@
-from kgrag_store import KGragRetriever
+from memory_agent.ollama import KGragOllama
 from config import settings
 
-
-model_embedding_url: str | None = None
-llm_model_url: str | None = None
-if settings.LLM_MODEL_TYPE == "ollama" and settings.LLM_URL is not None:
-    model_embedding_url = f"{settings.LLM_URL}/api/embeddings"
-    llm_model_url = settings.LLM_URL
-
-kgrag = KGragRetriever(
+kgrag_ollama = KGragOllama(
     path_type="fs",
     path_download=settings.PATH_DOWNLOAD,
     format_file="pdf",
     collection_name=settings.COLLECTION_NAME,
-    llm_model=settings.LLM_MODEL_NAME,
-    llm_type=settings.LLM_MODEL_TYPE,
-    llm_model_url=llm_model_url,
-    model_embedding_type=settings.LLM_MODEL_TYPE,
+    model_name=settings.LLM_MODEL_NAME,
+    base_url=settings.LLM_URL,
     model_embedding_name=settings.MODEL_EMBEDDING,
-    model_embedding_url=model_embedding_url,
+    model_embedding_url=settings.LLM_URL,
     model_embedding_vs_name=settings.VECTORDB_SENTENCE_MODEL,
     model_embedding_vs_type=settings.VECTORDB_SENTENCE_TYPE,
     model_embedding_vs_path=settings.VECTORDB_SENTENCE_PATH,
@@ -29,6 +20,5 @@ kgrag = KGragRetriever(
     qdrant_url=settings.QDRANT_URL,
     redis_host=settings.REDIS_HOST,
     redis_port=settings.REDIS_PORT,
-    redis_db=settings.REDIS_DB,
-    api_key=settings.OPENAI_API_KEY
+    redis_db=settings.REDIS_DB
 )

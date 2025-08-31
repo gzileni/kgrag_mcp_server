@@ -1,6 +1,6 @@
 import os
 from mcp.server.fastmcp import FastMCP, Context
-from kgrag_store import (
+from memory_agent.kgrag import (
     parser_prompt,
     query_prompt
 )
@@ -8,11 +8,30 @@ from starlette.applications import Starlette
 from starlette.routing import Mount
 from starlette.responses import PlainTextResponse
 from starlette.routing import Route
-from kgrag import kgrag
 from typing import Optional
+from config import settings
 
 # Initialize FastMCP server
-mcp = FastMCP("KGraph")
+mcp = FastMCP("KGraph MCP Server")
+
+# Register KGrag instance based on LLM model type
+# Import into a temporary name and then assign
+# to `kgrag` so the variable is always defined,
+# and raise a clear error for unsupported configuration.
+
+_kgrag = None
+
+if settings.LLM_MODEL_TYPE == "ollama":
+    from kgrag_ollama import kgrag_ollama as _kgrag
+elif settings.LLM_MODEL_TYPE == "openai":
+    from kgrag_openai import kgrag_openai as _kgrag
+else:
+    raise RuntimeError(
+        "Unsupported LLM_MODEL_TYPE: "
+        + f"{settings.LLM_MODEL_TYPE!r}. Expected 'ollama' or 'openai'."
+    )
+
+kgrag = _kgrag
 
 
 async def health(_):
