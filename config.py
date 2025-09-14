@@ -190,7 +190,7 @@ class Settings:
         # Set the environment
         self.ENVIRONMENT = get_environment()
         self.APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
-        self.OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", None)
+        self.API_KEY = os.getenv("API_KEY", None)
 
         self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
         self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -205,10 +205,13 @@ class Settings:
         )
         logger.info(f"Path Download: {self.PATH_DOWNLOAD}")
 
+        self.TEMPERATURE = float(os.getenv('TEMPERATURE', 0.5))
+        logger.info(f"Temperature: {self.TEMPERATURE}")
+
         # Neo4j settings
         self.NEO4J_URL = os.getenv('NEO4J_URL', 'neo4j://localhost:7687')
-        self.NEO4J_USERNAME = os.getenv('NEO4J_USERNAME', 'neo4j')
-        self.NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', 'neo4j')
+        self.NEO4J_USERNAME = os.getenv('NEO4J_USERNAME', None)
+        self.NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', None)
         self.NEO4J_DB_NAME = os.getenv('NEO4J_DB_NAME', None)
         logger.info(f"Neo4j URL: {self.NEO4J_URL}")
         logger.info(f"Neo4j Username: {self.NEO4J_USERNAME}")

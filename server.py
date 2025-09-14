@@ -106,14 +106,14 @@ async def parser(
     )
 )
 async def search(
-    query: str
+    q: str
 ) -> Dict[str, List[Dict[str, Any]]]:
     """
     Query the KGraph system with a specific query string.
     Args:
         query (str): Query for the document to be ingested.
     """
-    search_result = await query_kgraph(query)
+    search_result = await query(q)
     response_json = {
         "results": {
             "id": "kgrag_search_result",
@@ -170,10 +170,10 @@ async def fetch(
 
 @mcp.tool(
     title="Query KGraph",
-    name="query_kgraph",
+    name="query",
     description="Query the KGraph system with a specific query string."
 )
-async def query_kgraph(
+async def query(
     q: str,
     ctx: Context
 ):
