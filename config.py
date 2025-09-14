@@ -271,6 +271,12 @@ class Settings:
                 f"VectorDB Sentence Path: {self.VECTORDB_SENTENCE_PATH}"
             )
 
+        self.MCP_ORIGIN = os.getenv(
+            "MCP_ORIGIN",
+            "https://caribou-modest-fully.ngrok-free.app"
+        )
+        logger.info(f"MCP Origin: {self.MCP_ORIGIN}")
+
         # Apply environment-specific settings
         self.apply_environment_settings()
 

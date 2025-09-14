@@ -6,9 +6,11 @@ from memory_agent.kgrag import (
 )
 from starlette.applications import Starlette
 from starlette.routing import Mount
-from starlette.responses import PlainTextResponse
+from starlette.responses import (
+    PlainTextResponse,
+)
 from starlette.routing import Route
-from typing import Optional
+from typing import Optional, Dict, Any, List
 from config import settings
 
 # Initialize FastMCP server
@@ -18,7 +20,6 @@ mcp = FastMCP("KGraph MCP Server")
 # Import into a temporary name and then assign
 # to `kgrag` so the variable is always defined,
 # and raise a clear error for unsupported configuration.
-
 _kgrag = None
 
 if settings.LLM_MODEL_TYPE == "ollama":
@@ -97,11 +98,82 @@ async def parser(
 
 
 @mcp.tool(
+    title="Search KGraph",
+    name="search",
+    description=(
+        "Search the KGraph system with a specific query"
+        " string to work with ChatGpt"
+    )
+)
+async def search(
+    query: str
+) -> Dict[str, List[Dict[str, Any]]]:
+    """
+    Query the KGraph system with a specific query string.
+    Args:
+        query (str): Query for the document to be ingested.
+    """
+    search_result = await query_kgraph(query)
+    response_json = {
+        "results": {
+            "id": "kgrag_search_result",
+            "title": search_result,
+            "url": settings.MCP_ORIGIN,
+        }
+    }
+
+    return {
+        "content": [{
+            "type": "text",
+            "text": response_json
+        }]
+    }
+
+
+@mcp.tool(
+    title="Fetch",
+    name="fetch",
+    description=(
+        "Ingest a path of file into the KGraph system "
+        "to work with ChatGpt"
+    )
+)
+async def fetch(
+    id: str
+) -> Dict[str, Any]:
+    """
+    Ingest a document into the KGraph system.
+    Args:
+        args (dict): Arguments containing the path to the document.
+            - path (str): Path to the document file to be ingested.
+        ctx (Context): Context for logging and reporting progress.
+    Returns:
+        str: Confirmation message indicating successful ingestion.
+    """
+
+    fetch_result = await ingestion(id)
+    response_json = {
+        "results": {
+            "id": "kgrag_search_result",
+            "title": id,
+            "text": fetch_result,
+            "url": settings.MCP_ORIGIN,
+        }
+    }
+    return {
+        "content": [{
+            "type": "text",
+            "text": response_json
+        }]
+    }
+
+
+@mcp.tool(
     title="Query KGraph",
-    name="query",
+    name="query_kgraph",
     description="Query the KGraph system with a specific query string."
 )
-async def query(
+async def query_kgraph(
     q: str,
     ctx: Context
 ):
@@ -193,7 +265,13 @@ def agent_query_prompt(
 # Mount the SSE server to the existing ASGI server
 app = Starlette(
     routes=[
-        Route("/healthz", endpoint=health),
-        Mount("/", app=mcp.sse_app()),
+        Route(
+            "/healthz",
+            endpoint=health
+        ),
+        Mount(
+            "/",
+            app=mcp.sse_app()
+        ),
     ]
 )
