@@ -65,7 +65,7 @@ async def extract(
     description="Query the KGraph system with a specific query string."
 )
 async def query(
-    q: str,
+    prompt: str,
     ctx: Context
 ):
     """
@@ -78,8 +78,8 @@ async def query(
     if not q.strip():
         return "query cannot be an empty string."
 
-    await ctx.info(f"Querying KGraph: {q}")
-    return await kgrag.query(q)
+    await ctx.info(f"Querying KGraph: {prompt}")
+    return await kgrag.query(prompt)
 
 
 @mcp.tool(
