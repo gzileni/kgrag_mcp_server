@@ -201,7 +201,7 @@ class Settings:
         self.AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
         self.AWS_REGION = os.getenv('AWS_REGION')
 
-        self.COLLECTION_NAME = os.getenv('COLLECTION_NAME')
+        self.COLLECTION_NAME = os.getenv('COLLECTION_NAME', 'kgrag_data')
         logger.info(f"Collection Name: {self.COLLECTION_NAME}")
 
         self.PATH_DOWNLOAD = get_path_ingestion(
