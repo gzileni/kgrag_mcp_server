@@ -6,6 +6,7 @@ services:
     profiles:
       - cpu
     restart: always
+    pull_policy: always
     image: ghcr.io/gzileni/kgrag-mcp-server:cpu
     ports:
       - "8000:8000"
@@ -46,6 +47,7 @@ services:
     profiles:
       - gpu
     restart: always
+    pull_policy: always
     image: ghcr.io/gzileni/kgrag-mcp-server:gpu
     ports:
       - "8000:8000"
