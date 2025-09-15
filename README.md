@@ -35,13 +35,10 @@ You can use GitHub Copilot in VSCode to interactively ingest documents into the 
 
 This workflow enables rapid prototyping and automation of ingestion tasks with Copilot's agent capabilities and a configurable server endpoint.
 
-![kgrag](./kgrag-mcp-server.gif)
-
 ---
 
 ## Dependencies
 
-- [`kgrag-store`](https://gzileni.github.io/kgrag-store/): Core data storage and graph management library.
 - [`memory-agent`](https://gzileni.github.io/memory-agent): A Python library for advanced memory management in AI agent applications
 
 ---
@@ -64,53 +61,11 @@ Queries the **Knowledge Graph** to obtain answers based on stored documents and 
 
 Ingests a document from the file system into the graph.
 
+![kgrag](./data-ingestion.gif)
+
 **Parameters**:
 
 * `path` (`str`) → Path to the file to ingest.
-
-
-###  `extract_graph_data`
-
-Extract graph data from a document using the KGraph system
-
-**Parameters**:
-
-* `raw_data` (`str`) → Raw data to process.
-
-###  `parser`
-
-Parse a document using the KGraph system.
-
-**Parameters**:
-
-* `text` (`str`) → Text to be parsed.
-
----
-
-## **Prompts**
-
-### 📜 `parser_text_prompt`
-
-Generates the **prompt** to extract relationships from text.
-
-```python
-@mcp.prompt(title="Parser Text Prompt")
-def parser_text_prompt(text: Optional[str] = None) -> str:
-```
-
-### 🤖 `agent_query_prompt`
-
-Generates the **prompt** to answer graph-based queries.
-
-```python
-@mcp.prompt(title="Agent Query Prompt")
-```
-
-Uses the `AGENT_PROMPT` constant and formats data from:
-
-* `nodes_str` → list of nodes
-* `edges_str` → list of relationships
-* `user_query` → user question
 
 ---
 

@@ -1,16 +1,12 @@
 import os
 from mcp.server.fastmcp import FastMCP, Context
-from memory_agent.kgrag import (
-    parser_prompt,
-    query_prompt
-)
 from starlette.applications import Starlette
 from starlette.routing import Mount
 from starlette.responses import (
     PlainTextResponse,
 )
 from starlette.routing import Route
-from typing import Optional, Dict, Any, List
+from typing import Dict, Any, List
 from config import settings
 
 # Initialize FastMCP server
@@ -65,40 +61,7 @@ async def extract_graph_data(
 
 
 @mcp.tool(
-    title="KGrag Parser",
-    name="parser",
-    description="Parse a document using the KGraph system.",
-)
-async def parser(
-    text: str,
-    ctx: Context,
-    prompt_user: Optional[str] = None
-):
-    """
-    Parse a document using the KGraph system.
-    Args:
-        text (str): Text to be parsed.
-        ctx (Context): Context for logging and reporting progress.
-    Returns:
-        str: Parsed relationships in JSON format.
-    """
-    if not isinstance(text, str):
-        return "text must be a string."
-    if not text.strip():
-        return "text cannot be an empty string."
-
-    components = await kgrag.llm_parser(
-        prompt_text=text,
-        prompt_user=prompt_user
-    )
-    await ctx.info(f"Parsed Relationships: {components}")
-    if isinstance(components, (str, dict, list)):
-        return components
-    return components.model_dump()
-
-
-@mcp.tool(
-    title="Search KGraph",
+    title="Search",
     name="search",
     description=(
         "Search the KGraph system with a specific query"
@@ -225,42 +188,6 @@ async def ingestion(
             return f"Error processing document {path}."
         await ctx.info(f"{d}")
     return f"Document {path} ingested successfully."
-
-
-@mcp.prompt(title="Parser Text Prompt")
-def parser_text_prompt(text: Optional[str] = None) -> str:
-    """
-    Generate a prompt for extracting relationships from text.
-    Args:
-        text (str): The input text to extract relationships from.
-    Returns:
-        str: The formatted prompt for the relationship extractor.
-    """
-    return parser_prompt(text)
-
-
-@mcp.prompt(title="Agent Query Prompt")
-def agent_query_prompt(
-    nodes_str: str,
-    edges_str: str,
-    user_query: str
-) -> str:
-    """
-    Generate a prompt for the agent to answer a user query
-    using the knowledge graph.
-    Args:
-        nodes_str (str): String representation of nodes in the graph.
-        edges_str (str): String representation of edges in the graph.
-        user_query (str): The user's query to be answered.
-    Returns:
-        str: The formatted prompt for the agent.
-    """
-    return query_prompt(
-        nodes_str=nodes_str,
-        edges_str=edges_str,
-        user_query=user_query
-    )
-
 
 # Mount the SSE server to the existing ASGI server
 app = Starlette(
