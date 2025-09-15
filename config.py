@@ -77,32 +77,24 @@ def get_environment() -> Environment:
 
 # Load appropriate .env file based on environment
 def load_env_file():
-    """Load environment-specific .env file."""
+    """
+    Load environment-specific .env file.
+    """
     env = get_environment()
     print(f"Loading environment: {env}")
     path_env = os.path.dirname(os.path.abspath(__file__))
-
-    # Define env files in priority order
-    env_files = [
-        os.path.join(path_env, f".env.{env.value}.local"),
-        os.path.join(path_env, f".env.{env.value}"),
-        os.path.join(path_env, ".env.local"),
-        os.path.join(path_env, ".env"),
-    ]
-
-    # Load the first env file that exists
-    for env_file in env_files:
-        if os.path.exists(env_file):
-            load_dotenv(dotenv_path=env_file)
-            print(f"Loaded environment from {env_file}")
-            return env_file
-
-    # Fall back to default if no env file found
-    return None
+    env_file = os.path.join(path_env, f".env.{env.value}")
+    if os.path.exists(env_file):
+        load_dotenv(dotenv_path=env_file)
+        print(f"Loaded environment from {env_file}")
 
 
 def load_env_llm(model: str):
-    """Load environment variables for LLM configuration."""
+    """
+    Load environment variables for LLM configuration.
+    Args:
+        model (str): The LLM model type (e.g., "openai", "ollama").
+    """
     env = get_environment()
     env_file_llm = f".env.{model}.{env.value}"
     print(f"Loading LLM environment: {env_file_llm}")
@@ -115,12 +107,11 @@ def load_env_llm(model: str):
         print(f"Loaded LLM environment from {env_llm}")
 
 
-ENV_FILE = load_env_file()
-
-
 def get_path_ingestion(collection_name: str) -> str:
     """
     Get the path for data ingestion.
+    Args:
+        collection_name (str): The name of the collection.
     Returns:
         str: The path for data ingestion.
     """
@@ -136,7 +127,14 @@ def get_path_ingestion(collection_name: str) -> str:
 
 # Parse list values from environment variables
 def parse_list_from_env(env_key, default=None):
-    """Parse a comma-separated list from an environment variable."""
+    """
+    Parse a comma-separated list from an environment variable.
+    Args:
+        env_key (str): The environment variable key.
+        default (list, optional): Default value if the env var is not set.
+    Returns:
+        list: Parsed list of values.
+    """
     value = os.getenv(env_key)
     if not value:
         return default or []
@@ -155,6 +153,11 @@ def parse_dict_of_lists_from_env(prefix, default_dict=None):
     """
     Parse dictionary of lists from environment variables
     with a common prefix.
+    Args:
+        prefix (str): The prefix for environment variables.
+        default_dict (dict, optional): Default dictionary to start with.
+    Returns:
+        dict: Parsed dictionary of lists.
     """
     result = default_dict or {}
 
@@ -188,6 +191,7 @@ class Settings:
         environment-specific overrides based on the current environment.
         """
         # Set the environment
+        load_env_file()
         self.ENVIRONMENT = get_environment()
         self.APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
         self.API_KEY = os.getenv("API_KEY", None)
@@ -197,7 +201,7 @@ class Settings:
         self.AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
         self.AWS_REGION = os.getenv('AWS_REGION')
 
-        self.COLLECTION_NAME = os.getenv('COLLECTION_NAME', 'kgrag_data')
+        self.COLLECTION_NAME = os.getenv('COLLECTION_NAME')
         logger.info(f"Collection Name: {self.COLLECTION_NAME}")
 
         self.PATH_DOWNLOAD = get_path_ingestion(

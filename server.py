@@ -6,7 +6,6 @@ from starlette.responses import (
     PlainTextResponse,
 )
 from starlette.routing import Route
-from typing import Dict, Any, List
 from config import settings
 
 # Initialize FastMCP server
@@ -37,10 +36,10 @@ async def health(_):
 
 @mcp.tool(
     title="Extract Graph Data",
-    name="extract_graph_data",
+    name="extract",
     description="Extract graph data from a document using the KGraph system."
 )
-async def extract_graph_data(
+async def extract(
     raw_data: str,
     ctx: Context
 ) -> dict:
@@ -58,77 +57,6 @@ async def extract_graph_data(
     nodes, relationships = await kgrag.extract_graph_components(raw_data)
     await ctx.info(f"Extracted Graph Data: {nodes}, {relationships}")
     return {"nodes": nodes, "relationships": relationships}
-
-
-@mcp.tool(
-    title="Search",
-    name="search",
-    description=(
-        "Search the KGraph system with a specific query"
-        " string to work with ChatGpt"
-    )
-)
-async def search(
-    q: str
-) -> Dict[str, List[Dict[str, Any]]]:
-    """
-    Query the KGraph system with a specific query string.
-    Args:
-        query (str): Query for the document to be ingested.
-    """
-    search_result = await query(q)
-    response_json = {
-        "results": {
-            "id": "kgrag_search_result",
-            "title": search_result,
-            "url": settings.MCP_ORIGIN,
-        }
-    }
-
-    return {
-        "content": [{
-            "type": "text",
-            "text": response_json
-        }]
-    }
-
-
-@mcp.tool(
-    title="Fetch",
-    name="fetch",
-    description=(
-        "Ingest a path of file into the KGraph system "
-        "to work with ChatGpt"
-    )
-)
-async def fetch(
-    id: str
-) -> Dict[str, Any]:
-    """
-    Ingest a document into the KGraph system.
-    Args:
-        args (dict): Arguments containing the path to the document.
-            - path (str): Path to the document file to be ingested.
-        ctx (Context): Context for logging and reporting progress.
-    Returns:
-        str: Confirmation message indicating successful ingestion.
-    """
-
-    fetch_result = await ingestion(id)
-    response_json = {
-        "results": {
-            "id": "kgrag_search_result",
-            "title": id,
-            "text": fetch_result,
-            "url": settings.MCP_ORIGIN,
-        }
-    }
-    return {
-        "content": [{
-            "type": "text",
-            "text": response_json
-        }]
-    }
 
 
 @mcp.tool(
