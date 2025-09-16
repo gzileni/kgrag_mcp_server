@@ -73,9 +73,9 @@ async def query(
     Args:
         query (str): Query for the document to be ingested.
     """
-    if not isinstance(q, str):
+    if not isinstance(prompt, str):
         return "query must be a string."
-    if not q.strip():
+    if not prompt.strip():
         return "query cannot be an empty string."
 
     await ctx.info(f"Querying KGraph: {prompt}")
