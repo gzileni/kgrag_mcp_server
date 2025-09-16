@@ -40,7 +40,7 @@ async def health(_):
     description="Extract graph data from a document using the KGraph system."
 )
 async def extract(
-    raw_data: str,
+    text: str,
     ctx: Context
 ) -> dict:
     """
@@ -51,10 +51,10 @@ async def extract(
     Returns:
         tuple: A tuple containing a dictionary of nodes and a list of edges.
     """
-    if not isinstance(raw_data, str):
+    if not isinstance(text, str):
         return {}, []
 
-    nodes, relationships = await kgrag.extract_graph_components(raw_data)
+    nodes, relationships = await kgrag.extract_graph_components(text)
     await ctx.info(f"Extracted Graph Data: {nodes}, {relationships}")
     return {"nodes": nodes, "relationships": relationships}
 
