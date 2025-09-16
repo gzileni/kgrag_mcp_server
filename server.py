@@ -31,6 +31,11 @@ kgrag = _kgrag
 
 
 async def health(_):
+    """
+    Health check endpoint.
+    Returns:
+        PlainTextResponse: "ok" if the server is healthy.
+    """
     return PlainTextResponse("ok")
 
 
