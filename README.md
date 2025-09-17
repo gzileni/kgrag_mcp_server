@@ -70,5 +70,3 @@ Ingests a document from the file system into the graph.
 ---
 
 ## [Docker](./docker/README.md)
-
-
